@@ -1,0 +1,32 @@
+collector01:
+    query: "SELECT USER"
+    metrics:
+      process_count:
+        description:  Session count 
+        labels: ["method", "status"]
+        type: counter
+      process_count_min_time:
+        description: Session count
+        labels: ["method", "status"]
+        type: gauge
+      process_count_max_time:
+        description: Session count
+        labels: ["method"]
+        type: gauge
+      
+
+collector02:
+    query: "SELECT CLIENT"
+    metrics:
+      user_count:
+        description:  Session count 
+        labels: ["method", "status"]
+        type: counter
+      user_count_min_time:
+        description: Session count
+        labels: ["method", "status"]
+        type: gauge
+      user_count_max_time:
+        description: Session count
+        labels: ["method"]
+        type: gauge
