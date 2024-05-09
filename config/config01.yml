@@ -1,32 +1,13 @@
-collector01:
-    query: "SELECT USER"
-    metrics:
-      process_count:
-        description:  Session count 
-        labels: ["method", "status"]
-        type: counter
-      process_count_min_time:
-        description: Session count
-        labels: ["method", "status"]
-        type: gauge
-      process_count_max_time:
-        description: Session count
-        labels: ["method"]
-        type: gauge
-      
-
-collector02:
-    query: "SELECT CLIENT"
-    metrics:
-      user_count:
-        description:  Session count 
-        labels: ["method", "status"]
-        type: counter
-      user_count_min_time:
-        description: Session count
-        labels: ["method", "status"]
-        type: gauge
-      user_count_max_time:
-        description: Session count
-        labels: ["method"]
-        type: gauge
+metrics:
+  process_count_by_host:
+    query: "select user, substring_index(host, ':', 1) host, count(*) sessions from information_schema.processlist group by 1,2 "
+    type: gauge
+    description: "process count by host"
+    labels: ["user","host"]
+    value: sessions
+  process_count_by_user:
+    query: "select user, count(*) sessions from information_schema.processlist group by 1 "
+    type: gauge
+    description: "process count by user"
+    labels: ["user"]
+    value: sessions
