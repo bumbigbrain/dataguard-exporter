@@ -49,6 +49,9 @@ class DataGuardExporter():
             print("    ", metric.query)
 
 
+    
+    
+
 
         
         

@@ -5,11 +5,6 @@ from collector import *
 
 
                 
-    
-                 
-
-            
-
 
 def main():
     
@@ -35,9 +30,11 @@ def main():
         configMetrics = configFile
     )
 
-    start_http_server(9100)
-    while True:
-        pass
+    print("SERVE EXPORTER AT PORT 9110") 
+    start_http_server(9110)
+    # loop fetching and serve 
+
+
     
 
 if __name__ == "__main__":
