@@ -47,7 +47,7 @@ def main():
 
     print("SERVE EXPORTER AT PORT 9110") 
     start_http_server(9110)
-    dgCollector.testingQuery()
+    dgCollector.collectMetrics()
     # loop fetching and serve 
 
 
