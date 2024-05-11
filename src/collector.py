@@ -20,10 +20,10 @@ class Metric():
 
 
 
-class DataGuardExporter():
+class DataGuardCollector():
     
     def __init__(self, configMetrics):
-       self.metrics = DataGuardExporter.initMetrics(configMetrics);
+       self.metrics = DataGuardCollector.initMetrics(configMetrics);
        self.showMetrics()
        
     def initMetrics(configMetrics):

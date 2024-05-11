@@ -4,10 +4,10 @@ metrics:
     type: gauge
     description: "process count by host"
     labels: ["user","host"]
-    value: sessions
+    value: millisec
   process_count_by_user:
     query: "select user, count(*) sessions from information_schema.processlist group by 1 "
     type: gauge
     description: "process count by user"
     labels: ["user"]
-    value: sessions
+    value: millisec

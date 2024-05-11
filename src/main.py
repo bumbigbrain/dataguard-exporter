@@ -26,7 +26,7 @@ def main():
     with open(config_metric_path) as file:
         configFile = yaml.load(file, Loader=yaml.SafeLoader)
 
-    dgExporter = DataGuardExporter(
+    dgExporter = DataGuardCollector(
         configMetrics = configFile
     )
 
