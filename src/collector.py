@@ -104,8 +104,10 @@ class DataGuardCollector():
                 # print(attrs.metric)
                 # print(attrs.type)
                 # print(attrs.description)
-                self.dbcursor.execute(attrs.query)
+                
+                self.dbcursor.execute(attrs.query) 
                 result = self.turnResultToDict(self.dbcursor.fetchall()) 
+                print(result)
                 value = result[attrs.value.upper()]  
                 func = attrs.function
                 match func:
@@ -115,8 +117,9 @@ class DataGuardCollector():
                 
                 label = result[attrs.labels[0].upper()] 
                 attrs.metric.labels(label).set(value)
-            time.sleep(3)
-                
+                self.conn.commit()
+            print("==================================")
+            time.sleep(1)  
 
             
             
