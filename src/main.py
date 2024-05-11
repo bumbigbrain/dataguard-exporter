@@ -27,11 +27,20 @@ def main():
         
     )
 
+    parser.add_argument(
+        "--port",
+        type=int,
+        dest="exporter_port",
+        default=9110
+        
+    )
+
 
     args = parser.parse_args()
 
     config_metric_path = args.config_metric_path
     config_database_path = args.config_database_path
+    exporter_port = args.exporter_port
 
     with open(config_metric_path) as file:
         configMetricsFile = yaml.load(file, Loader=yaml.SafeLoader)
@@ -46,7 +55,7 @@ def main():
     )
 
     print("SERVE EXPORTER AT PORT 9110") 
-    start_http_server(9110)
+    start_http_server(exporter_port)
     dgCollector.collectMetrics()
     # loop fetching and serve 
 
