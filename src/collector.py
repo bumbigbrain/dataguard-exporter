@@ -77,8 +77,10 @@ class DataGuardCollector():
 
 
     def collectMetrics(self):
-         
-        pass
+        for metric, attrs in self.metrics.items():
+            print(metric)            
+            print(attrs)
+             
 
     
     
