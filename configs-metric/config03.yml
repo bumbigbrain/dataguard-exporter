@@ -1,0 +1,43 @@
+metrics:
+  apply_finish_time:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS 
+        WHERE NAME='APPLY_FINISH_TIME' 
+        ORDER BY CAST(TIME_COMPUTED AS DATETIME) 
+        DESC LIMIT 1;
+        " 
+    type: gauge
+    description: "Provides an estimate of the time remaining for the standby to finish applying all the received, but unapplied redo data from the primary database."
+    labels: ["sourcedb_id"]
+    value: ["value"]
+    function: ["to_millisec"]
+    
+  apply_lag:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS 
+        WHERE NAME='APPLY_LAG' 
+        ORDER BY CAST(TIME_COMPUTED AS DATETIME) 
+        DESC LIMIT 1;
+        " 
+    type: gauge
+    description: "This indicates how far behind the data in the standby database is compared to the primary database."
+    labels: ["sourcedb_id"]
+    value: ["value"]
+    function: ["to_millisec"]
+
+  transport_lag:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS 
+        WHERE NAME='TRANSPORT_LAG' 
+        ORDER BY CAST(TIME_COMPUTED AS DATETIME) 
+        DESC LIMIT 1;
+        " 
+    type: gauge
+    description: "This represents the delay in transferring redo data from the primary database to the standby."
+    labels: ["sourcedb_id"]
+    value: ["value"]
+    function: ["to_millisec"]
+
