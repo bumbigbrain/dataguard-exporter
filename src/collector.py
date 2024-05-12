@@ -14,15 +14,18 @@ class Metric():
 
 
     def __init__(self, varName, query, type, description, labels, value, function):
-        if type.lower() == "gauge":
-            self.metric = Gauge(varName, description, labelnames=labels)
-            self.varName = varName
-            self.type = type
-            self.query = query
-            self.description = description
-            self.labels = labels
-            self.value = value
-            self.function = function
+        match type.lower():
+            case "gauge":
+                self.metric = Gauge(varName, description, labelnames=labels)
+            case "info": 
+                self.metric = Info(varName, description)
+        self.varName = varName
+        self.type = type
+        self.query = query
+        self.description = description
+        self.labels = labels
+        self.value = value
+        self.function = function
         
         
                 
@@ -92,33 +95,37 @@ class DataGuardCollector():
         
     
         
+    def handleCollectGauge(self, metric, attrs):
+        self.dbcursor.execute(attrs.query) 
+        result = self.turnResultToDict(self.dbcursor.fetchall()) 
+        print(result)
+        value = result[attrs.value.upper()]  
+        func = attrs.function
+        match func:
+            case "to_millisec":
+                value = self.toMillisec(value)
+            
         
+        label = result[attrs.labels[0].upper()] 
+        attrs.metric.labels(label).set(value)
+        self.conn.commit()
         
-
+    
+    def handleCollectInfo(self):
+        pass
 
     def collectMetrics(self):
         while True:
             for metric, attrs in self.metrics.items():
                 # now  support only gauge
-                # print(metric)            
-                # print(attrs.metric)
-                # print(attrs.type)
-                # print(attrs.description)
-                
-                self.dbcursor.execute(attrs.query) 
-                result = self.turnResultToDict(self.dbcursor.fetchall()) 
-                print(result)
-                value = result[attrs.value.upper()]  
-                func = attrs.function
-                match func:
-                    case "to_millisec":
-                        value = self.toMillisec(value)
-                    
-                
-                label = result[attrs.labels[0].upper()] 
-                attrs.metric.labels(label).set(value)
-                self.conn.commit()
-            print("==================================")
+                match attrs.type.lower():
+                    case "gauge":
+                        self.handleCollectGauge(metric, attrs)
+                    case "info":
+                        print("yes the info pass")
+
+
+                        
             time.sleep(1)  
 
             
