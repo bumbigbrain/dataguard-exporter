@@ -100,6 +100,8 @@ class DataGuardCollector():
     def handleCollectGauge(self, metric, attrs):
         self.dbcursor.execute(attrs.query) 
         result = self.turnResultToDict(self.dbcursor.fetchall())[0]
+        if len(result) == 0:
+            return
         # print(result)
         value = result[attrs.value.upper()]  
         func = attrs.function
@@ -116,6 +118,8 @@ class DataGuardCollector():
     def handleCollectInfo(self, metric, attrs):
         self.dbcursor.execute(attrs.query)
         results = self.turnResultToDict(self.dbcursor.fetchall())
+        if len(results) == 0:
+            return
         # attrs.metric.info(results[0])
         for dic in results:
             temp = []
