@@ -79,9 +79,11 @@ class DataGuardCollector():
         print(result)
 
 
-    def turnResultToDict(self, result):
-        column_name = [desc[0] for desc in self.dbcursor.description] 
-        data_dict = dict(zip(column_name, result[0]))
+    def turnResultToDict(self, results):     
+        data_dict = [] 
+        for result in results:
+            column_name = [desc[0] for desc in self.dbcursor.description] 
+            data_dict.append(dict(zip(column_name, result)))
         return data_dict
 
             
@@ -97,7 +99,7 @@ class DataGuardCollector():
         
     def handleCollectGauge(self, metric, attrs):
         self.dbcursor.execute(attrs.query) 
-        result = self.turnResultToDict(self.dbcursor.fetchall()) 
+        result = self.turnResultToDict(self.dbcursor.fetchall())[0]
         # print(result)
         value = result[attrs.value.upper()]  
         func = attrs.function
@@ -113,10 +115,14 @@ class DataGuardCollector():
     
     def handleCollectInfo(self, metric, attrs):
         self.dbcursor.execute(attrs.query)
-        result = self.dbcursor.fetchall()
-        #turn result to dict and set to info
-        
-        print(result)
+        results = self.turnResultToDict(self.dbcursor.fetchall())
+        # attrs.metric.info(results[0])
+        for dic in results:
+            temp = []
+            for label in attrs.labels:
+                temp.append(dic[label.upper()])        
+            metric_info = dict(zip(attrs.labels, temp))
+            attrs.metric.info(metric_info)
         self.conn.commit()
         
 

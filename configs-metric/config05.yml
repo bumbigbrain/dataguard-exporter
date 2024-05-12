@@ -55,7 +55,7 @@ metrics:
     function: "to_millisec"
 
     
-  crash_recovery:
+  dataguard_status_dataguard:
     query: "
         SELECT *
         FROM V$DATAGUARD_STATUS
@@ -65,9 +65,130 @@ metrics:
         ) and FACILITY = 'Data Guard';
         "
     type: info
-    description: "qwer"
-    labels: [""]
+    description: "dataguard status log"
+    labels: ["facility", "severity", "message"]
     value: ""
     function: ""
     
     
+  dataguard_status_log_transport:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Log Transport Services';
+        "
+    type: info
+    description: "log transport services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+    
+
+
+  dataguard_status_log_apply_services:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Log Apply Services';
+        "
+    type: info
+    description: "log apply services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+  dataguard_status_role_management_services:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Role Management Services';
+        "
+    type: info
+    description: "role management services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+  
+
+  dataguard_status_remote_file_server:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Remote File Server';
+        "
+    type: info
+    description: "remote file server"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+
+  dataguard_status_fetch_archive_log:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Fetch Archive Log';
+        "
+    type: info
+    description: "fetch archive log"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+  
+  dataguard_status_crash_recovery:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Crash Recovery';
+        "
+    type: info
+    description: "crash recovery"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+  dataguard_status_network_services:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Network Services';
+        "
+    type: info
+    description: "network services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
