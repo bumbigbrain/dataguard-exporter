@@ -111,8 +111,12 @@ class DataGuardCollector():
         self.conn.commit()
         
     
-    def handleCollectInfo(self):
-        pass
+    def handleCollectInfo(self, metric, attrs):
+        self.dbcursor.execute(attrs.query)
+        result = self.dbcursor.fetchall()
+        # print(result)
+        self.conn.commit()
+        
 
     def collectMetrics(self):
         while True:
@@ -122,7 +126,7 @@ class DataGuardCollector():
                     case "gauge":
                         self.handleCollectGauge(metric, attrs)
                     case "info":
-                        print("yes the info pass")
+                        self.handleCollectInfo(metric, attrs)
 
 
                         

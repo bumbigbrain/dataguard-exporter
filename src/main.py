@@ -15,7 +15,7 @@ def main():
         "--configmetric",
         type=str,
         dest="config_metric_path",
-        default="../configs-metric/config03.yml"
+        default="../configs-metric/config04.yml"
         
     )
 
