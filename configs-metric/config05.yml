@@ -1,0 +1,73 @@
+#FOR TIMESTAMP FORMAT 05/11/2024 16:59:44 
+metrics:
+  apply_finish_time:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS
+        WHERE NAME='APPLY_FINISH_TIME'
+        ORDER BY CAST(CONCAT(
+        SUBSTRING(TIME_COMPUTED, 7, 4), '-', 
+        SUBSTRING(TIME_COMPUTED, 1, 2), '-', 
+        SUBSTRING(TIME_COMPUTED, 4, 2), 
+        SUBSTRING(TIME_COMPUTED, 11, 9)) AS DATETIME) 
+        DESC LIMIT 1;  
+        " 
+    type: gauge
+    description: "Provides an estimate of the time remaining for the standby to finish applying all the received, but unapplied redo data from the primary database."
+    labels: ["source_dbid"]
+    value: "value"
+    function: "to_millisec"
+    
+  apply_lag:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS
+        WHERE NAME='APPLY_LAG'
+        ORDER BY CAST(CONCAT(
+        SUBSTRING(TIME_COMPUTED, 7, 4), '-', 
+        SUBSTRING(TIME_COMPUTED, 1, 2), '-', 
+        SUBSTRING(TIME_COMPUTED, 4, 2), 
+        SUBSTRING(TIME_COMPUTED, 11, 9)) AS DATETIME) 
+        DESC LIMIT 1; 
+        " 
+    type: gauge
+    description: "This indicates how far behind the data in the standby database is compared to the primary database."
+    labels: ["source_dbid"]
+    value: "value"
+    function: "to_millisec"
+
+  transport_lag:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS
+        WHERE NAME='TRANSPORT_LAG'
+        ORDER BY CAST(CONCAT(
+        SUBSTRING(TIME_COMPUTED, 7, 4), '-', 
+        SUBSTRING(TIME_COMPUTED, 1, 2), '-', 
+        SUBSTRING(TIME_COMPUTED, 4, 2), 
+        SUBSTRING(TIME_COMPUTED, 11, 9)) AS DATETIME) 
+        DESC LIMIT 1; 
+        " 
+    type: gauge
+    description: "This represents the delay in transferring redo data from the primary database to the standby."
+    labels: ["source_dbid"]
+    value: "value"
+    function: "to_millisec"
+
+    
+  crash_recovery:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Data Guard';
+        "
+    type: info
+    description: "qwer"
+    labels: [""]
+    value: ""
+    function: ""
+    
+    

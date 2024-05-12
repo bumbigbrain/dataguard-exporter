@@ -98,7 +98,7 @@ class DataGuardCollector():
     def handleCollectGauge(self, metric, attrs):
         self.dbcursor.execute(attrs.query) 
         result = self.turnResultToDict(self.dbcursor.fetchall()) 
-        print(result)
+        # print(result)
         value = result[attrs.value.upper()]  
         func = attrs.function
         match func:
@@ -114,7 +114,9 @@ class DataGuardCollector():
     def handleCollectInfo(self, metric, attrs):
         self.dbcursor.execute(attrs.query)
         result = self.dbcursor.fetchall()
-        # print(result)
+        #turn result to dict and set to info
+        
+        print(result)
         self.conn.commit()
         
 
