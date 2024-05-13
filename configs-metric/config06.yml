@@ -1,0 +1,227 @@
+#FOR TIMESTAMP FORMAT 05/11/2024 16:59:44 
+
+#V$DATAGUARD_STATS
+#V$DATAGUARD_STATUS
+#V$DATAFILE_HEADER
+#V$MANAGED_STANDBY
+
+
+
+metrics:
+  dataguard_stats_apply_finish_time:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS
+        WHERE NAME='APPLY FINISH TIME'
+        ORDER BY CAST(CONCAT(
+        SUBSTRING(TIME_COMPUTED, 7, 4), '-', 
+        SUBSTRING(TIME_COMPUTED, 1, 2), '-', 
+        SUBSTRING(TIME_COMPUTED, 4, 2), 
+        SUBSTRING(TIME_COMPUTED, 11, 9)) AS DATETIME) 
+        DESC LIMIT 1;  
+        " 
+    type: gauge
+    description: "Provides an estimate of the time remaining for the standby to finish applying all the received, but unapplied redo data from the primary database."
+    labels: ["source_dbid"]
+    value: "value"
+    function: "to_millisec"
+    
+  dataguard_stats_apply_lag:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS
+        WHERE NAME='APPLY LAG'
+        ORDER BY CAST(CONCAT(
+        SUBSTRING(TIME_COMPUTED, 7, 4), '-', 
+        SUBSTRING(TIME_COMPUTED, 1, 2), '-', 
+        SUBSTRING(TIME_COMPUTED, 4, 2), 
+        SUBSTRING(TIME_COMPUTED, 11, 9)) AS DATETIME) 
+        DESC LIMIT 1; 
+        " 
+    type: gauge
+    description: "This indicates how far behind the data in the standby database is compared to the primary database, If value == 0 then Good health."
+    labels: ["source_dbid"]
+    value: "value"
+    function: "to_millisec"
+
+  dataguard_stats_transport_lag:
+    query: "
+        SELECT SOURCE_DBID, VALUE
+        FROM V$DATAGUARD_STATS
+        WHERE NAME='TRANSPORT LAG'
+        ORDER BY CAST(CONCAT(
+        SUBSTRING(TIME_COMPUTED, 7, 4), '-', 
+        SUBSTRING(TIME_COMPUTED, 1, 2), '-', 
+        SUBSTRING(TIME_COMPUTED, 4, 2), 
+        SUBSTRING(TIME_COMPUTED, 11, 9)) AS DATETIME) 
+        DESC LIMIT 1; 
+        " 
+    type: gauge
+    description: "This represents the delay in transferring redo data from the primary database to the standby, If value == 0 then Good health."
+    labels: ["source_dbid"]
+    value: "value"
+    function: "to_millisec"
+
+    
+  dataguard_status_dataguard:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Data Guard';
+        "
+    type: info
+    description: "dataguard status log"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+    
+    
+  dataguard_status_log_transport:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Log Transport Services';
+        "
+    type: info
+    description: "log transport services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+    
+
+
+  dataguard_status_log_apply_services:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Log Apply Services';
+        "
+    type: info
+    description: "log apply services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+  dataguard_status_role_management_services:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Role Management Services';
+        "
+    type: info
+    description: "role management services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+  
+
+  dataguard_status_remote_file_server:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Remote File Server';
+        "
+    type: info
+    description: "remote file server"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+
+  dataguard_status_fetch_archive_log:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Fetch Archive Log';
+        "
+    type: info
+    description: "fetch archive log"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+  
+  dataguard_status_crash_recovery:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Crash Recovery';
+        "
+    type: info
+    description: "crash recovery"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+
+  dataguard_status_network_services:
+    query: "
+        SELECT *
+        FROM V$DATAGUARD_STATUS
+        WHERE TIMESTAMP = (
+        SELECT MAX(TIMESTAMP)
+        FROM V$DATAGUARD_STATUS
+        ) and FACILITY = 'Network Services';
+        "
+    type: info
+    description: "network services"
+    labels: ["facility", "severity", "message"]
+    value: ""
+    function: ""
+
+
+  dataguard_media_recovery_process:
+    query: "
+        select *
+        from v$managed_standby
+        where process like 'MRP%'; 
+        "
+    type: info
+    description: "Verify that the Media Recovery Process(MRP) is currently running, If there is no value are returned, MRP is not running."
+    labels: ["process", "pid", "status"]
+    value: ""
+    function: ""
+
+
+  dataguard_datafile_header:
+    query: "
+        select *
+        from v$datafile_header
+        where status ='OFFLINE'
+        or ERROR is not null; 
+        "
+    type: info
+    description: "Standby datafile check, if there is a value, the file have recovery issues."
+    labels: ["status", "error"]
+    value: ""
+    function: ""
