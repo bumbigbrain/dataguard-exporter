@@ -114,7 +114,10 @@ class DataGuardCollector():
     
         
     def handleCollectGauge(self, metric, attrs):
-        self.dbcursor.execute(attrs.query) 
+        try:
+            self.dbcursor.execute(attrs.query) 
+        except:
+            print("Error to execute SQL in handleCollectGauge") 
         temp = self.dbcursor.fetchall()
         if len(temp) == 0:
             return
@@ -133,7 +136,10 @@ class DataGuardCollector():
         
     
     def handleCollectInfo(self, metric, attrs):
-        self.dbcursor.execute(attrs.query)
+        try:
+            self.dbcursor.execute(attrs.query)
+        except:
+            print("Error to execute SQL in handleCollectInfo")
         results = self.turnResultToDict(self.dbcursor.fetchall())
         if len(results) == 0:
             return
