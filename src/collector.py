@@ -99,9 +99,10 @@ class DataGuardCollector():
         
     def handleCollectGauge(self, metric, attrs):
         self.dbcursor.execute(attrs.query) 
-        result = self.turnResultToDict(self.dbcursor.fetchall())[0]
-        if len(result) == 0:
+        temp = self.dbcursor.fetchall()
+        if len(temp) == 0:
             return
+        result = self.turnResultToDict(temp)[0]
         # print(result)
         value = result[attrs.value.upper()]  
         func = attrs.function
