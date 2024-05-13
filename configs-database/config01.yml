@@ -1,4 +1,5 @@
-database:
+database: 
+  vendor: "mysql" # mysql, oracle
   user: "root"
   password: "1q2w3e4r"
   host: "127.0.0.1"

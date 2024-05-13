@@ -1,5 +1,7 @@
 from prometheus_client import start_http_server, Gauge, Counter, Summary, Enum, Histogram, Info
 from prometheus_client.core import GaugeMetricFamily, CounterMetricFamily
+import os
+import cx_Oracle
 import mysql.connector
 import pprint
 import time
@@ -58,13 +60,27 @@ class DataGuardCollector():
 
     def registerDatabase(configDatabase):
         databaseInfo = configDatabase["database"]
-        return mysql.connector.connect(
-            user = databaseInfo["user"],
-            password = databaseInfo["password"],
-            host = databaseInfo["host"],
-            port = databaseInfo["port"],
-            database = databaseInfo["database"]
-        )
+
+        match databaseInfo["vendor"]:
+            case "mysql": 
+                return mysql.connector.connect(
+                    user = databaseInfo["user"],
+                    password = databaseInfo["password"],
+                    host = databaseInfo["host"],
+                    port = databaseInfo["port"],
+                    database = databaseInfo["database"]
+                )
+            case "oracle": 
+                user = os.getenv("PROM_USER")                
+                password = os.getenv("PROM_PASSWORD")
+                dsn = os.getenv("DSN_FOR_PROM")
+
+                return cx_Oracle.connect(
+                    user = user,
+                    password = password,
+                    dsn = dsn,
+                    encoding = "UTF-8"
+                )
 
     
     def showMetrics(self):
